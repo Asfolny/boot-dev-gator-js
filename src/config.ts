@@ -7,7 +7,8 @@ type Config = {
   dbUrl: string;
 }
 
-export function setUser(cfg: Config, user: string): void {
+export function setUser(user: string): void {
+  const cfg = readConfig();
   cfg.currentUserName = user;
   writeConfig(cfg);
 }

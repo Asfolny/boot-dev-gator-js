@@ -1,5 +1,10 @@
+import { setUser, readConfig } from './config.js';
+
 function main() {
-  console.log("Hello, world!");
+  let cfg = readConfig();
+  setUser(cfg, "lane");
+  cfg = readConfig();
+  console.log(cfg);
 }
 
 main();

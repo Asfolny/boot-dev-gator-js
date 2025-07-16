@@ -18,7 +18,13 @@ function getConfigFilePath(): string {
 }
 
 function writeConfig(cfg: Config): void {
-  fs.writeFileSync(getConfigFilePath(), JSON.stringify({current_user_name: cfg.currentUserName, db_url: cfg.dbUrl}));
+  const file = getConfigFilePath()
+  const data = JSON.stringify({
+    current_user_name: cfg.currentUserName,
+    db_url: cfg.dbUrl
+  }, null, 2);
+
+  fs.writeFileSync(file, data, { encoding: "utf-8" });
 }
 
 export function readConfig(): Config {

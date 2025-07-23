@@ -1,4 +1,4 @@
-import { registerCommand, runCommand, type CommandsRegistry } from './registry.js';
+import { registerCommand, runCommand, CommandsRegistry } from './registry.js';
 import { handlerLogin } from './handler_login.js';
 
 function main() {

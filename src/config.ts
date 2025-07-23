@@ -30,7 +30,7 @@ function writeConfig(cfg: Config): void {
 export function readConfig(): Config {
   const file = getConfigFilePath();
   const data = fs.readFileSync(file);
-  const raw = JSON.parse(data);
+  const raw = JSON.parse(data.toString());
 
   return validateConfig(raw);
 }

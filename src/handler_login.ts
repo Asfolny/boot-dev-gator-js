@@ -1,11 +1,17 @@
-import { CommandHandler } from "./registry.js";
-import { setUser } from "./config.js";
+import { setUser } from "./config";
+import { getUser } from "./lib/db/queries/users";
 
-export function handlerLogin(cmdName: string, ...args: string[]): void {
-	if (args.length < 1) {
-		throw new Error(`${cmdName} expects 1 argument, the username`);
-	}
+export async function handlerLogin(cmdName: string, ...args: string[]) {
+  if (args.length !== 1) {
+    throw new Error(`usage: ${cmdName} <name>`);
+  }
 
-	setUser(args[0]);
-	console.log(`Logged in ${args[0]}`);
+  const userName = args[0];
+  const existingUser = await getUser(userName);
+  if (!existingUser) {
+    throw new Error(`User ${userName} not found`);
+  }
+
+  setUser(existingUser.name);
+  console.log("User switched successfully!");
 }

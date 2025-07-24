@@ -3,6 +3,7 @@ import { handlerLogin } from './handler_login';
 import { handlerRegister } from './handler_register';
 import { handlerReset } from './handler_reset';
 import { handlerUsers } from './handler_users';
+import { handlerAgg } from './handler_agg';
 
 async function main() {
 	const args = process.argv.slice(2);
@@ -20,6 +21,7 @@ async function main() {
 	registerCommand(registry, "register", handlerRegister);
 	registerCommand(registry, "reset", handlerReset);
 	registerCommand(registry, "users", handlerUsers);
+	registerCommand(registry, "agg", handlerAgg);
 
 	try {
     		await runCommand(registry, cmdName, ...cmdArgs);

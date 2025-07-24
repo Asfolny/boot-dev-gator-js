@@ -16,7 +16,7 @@ type RSSItem = {
   pubDate: string;
 };
 
-export async function fetchFeed(feedURL: string): RSSFeed {
+export async function fetchFeed(feedURL: string): Promise<RSSFeed> {
 	const resp = await fetch(feedURL, {
 		headers: {
 			'User-Agent': 'gator'
@@ -53,11 +53,13 @@ export async function fetchFeed(feedURL: string): RSSFeed {
 	}
 
 	const feed = {
-		title: channel.title,
-		link: channel.link,
-		description: channel.description,
-		item: items,
-	};
+		channel: {
+			title: channel.title as string,
+			link: channel.link as string,
+			description: channel.description as string,
+			item: items as RSSItem[],
+		}
+	} as RSSFeed;
 
 	return feed;
 }

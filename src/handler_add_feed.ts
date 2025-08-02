@@ -1,22 +1,11 @@
 import { addFeed } from "./lib/db/queries/feeds";
-import { readConfig } from "./config";
-import { getUser } from "./lib/db/queries/users";
 import { Feed, User } from "src/lib/db/schema";
 import { createFeedFollow } from "./lib/db/queries/feed_follows";
 import { printFeedFollow } from "./handler_follow";
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]): Promise<void> {
+export async function handlerAddFeed(cmdName: string, user: User, ...args: string[]): Promise<void> {
 	if (args.length < 2) {
 		throw new Error(`${cmdName} requires 2 arguments, the name and the feed url`);
-	}
-
-	const config = readConfig();
-	if (!config.currentUserName) {
-		throw new Error('No set user');
-	}
-	const user = await getUser(config.currentUserName);
-	if (!user) {
-		throw new Error('No such user');
 	}
 
 	const feed = await addFeed(args[0], args[1], user.id);

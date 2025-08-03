@@ -48,7 +48,7 @@ export async function getFeedFollowsForUser(user_id: string) {
   return result;
 }
 
-export async function deleteFeedFollows(user_id: string, feed_id) {
+export async function deleteFeedFollows(user_id: string, feed_id: string) {
   await db.delete(feedFollows).where(
     and(
         eq(feedFollows.user_id, user_id),

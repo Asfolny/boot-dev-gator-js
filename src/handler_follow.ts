@@ -2,6 +2,7 @@ import { getFeedByURL } from "./lib/db/queries/feeds";
 import {
   createFeedFollow,
   getFeedFollowsForUser,
+  deleteFeedFollows,
 } from "./lib/db/queries/feed_follows";
 import { readConfig } from "./config";
 import { getUser } from "./lib/db/queries/users";
@@ -35,6 +36,21 @@ export async function handlerListFeedFollows(cmdName: string, user: User, ...arg
   for (let ff of feedFollows) {
     console.log(`* %s`, ff.feedname);
   }
+}
+
+export async function handlerUnfollow(cmdName: string, user: User, ...args: string[]) {
+  if (args.length !== 1) {
+    throw new Error(`usage: ${cmdName} <feed_url>`)
+  }
+
+  const feedURL = args[0];
+  const feed = await getFeedByURL(feedURL);
+  if (!feed) {
+    throw new Error(`Feed not found: ${feedURL}`);
+  }
+
+  await deleteFeedFollows(user.id, feed.id);
+  console.log(`Succesfully unfollowed ${feedURL}`);
 }
 
 export function printFeedFollow(username: string, feedname: string) {

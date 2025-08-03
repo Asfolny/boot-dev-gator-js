@@ -1,5 +1,7 @@
 import { fetchFeed } from "./feed";
 import { getNextFeedToFetch, markFeedFetched } from "./lib/db/queries/feeds";
+import { NewPost, Feed } from "./lib/db/schema";
+import { createPost } from "./lib/db/queries/posts";
 
 export async function handlerAgg(cmdName: string, ...args: string[]): Promise<void> {
 	if (args.length !== 1) {
@@ -17,7 +19,7 @@ export async function handlerAgg(cmdName: string, ...args: string[]): Promise<vo
 	scrapeFeeds().catch(handleError);
 	const interval = setInterval(() => {
 		scrapeFeeds().catch(handleError);
-	}, match);
+	}, timeBetweenRequests);
 
 	await new Promise<void>((resolve) => {
 	  process.on("SIGINT", () => {
@@ -42,6 +44,21 @@ async function scrapeFeed(feed: Feed) {
 	await markFeedFetched(feed.id);
 
 	const feedData = await fetchFeed(feed.url);
+	for (let item of feedData.channel.item) {
+		console.log(`Found post: %s`, item.title);
+
+		const now = new Date();
+
+		await createPost({
+			url: item.link,
+			feedId: feed.id,
+			title: item.title,
+			createdAt: now,
+			updatedAt: now,
+			description: item.description,
+			publishedAt: new Date(item.pubDate),
+		} satisfies NewPost);
+	}
 
 	console.log(
 		`Feed ${feed.name} collected, ${feedData.channel.item.length} posts found`,

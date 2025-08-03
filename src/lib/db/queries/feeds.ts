@@ -1,6 +1,6 @@
 import { db } from "..";
 import { feeds } from "../schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { firstOrUndefined } from "./utils";
 
 export async function addFeed(name: string, url: string, user_id: string) {
@@ -17,3 +17,6 @@ export async function getFeedByURL(url: string) {
   return firstOrUndefined(result);
 }
 
+export async function markFeedFetched(id: string) {
+  await db.update(feeds).set({ last_fetched_at: sql`NOW()` }).where(eq(feeds.id, id));
+}

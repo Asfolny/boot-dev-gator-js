@@ -7,6 +7,7 @@ import { handlerAgg } from './handler_agg';
 import { handlerAddFeed } from './handler_add_feed';
 import { handlerFeeds } from './handler_feeds';
 import { handlerFollow, handlerListFeedFollows, handlerUnfollow } from './handler_follow';
+import { handlerBrowse } from './handler_browse';
 
 async function main() {
 	const args = process.argv.slice(2);
@@ -30,6 +31,7 @@ async function main() {
 	registerCommand(registry, "follow", middlewareLoggedIn(handlerFollow));
 	registerCommand(registry, "following", middlewareLoggedIn(handlerListFeedFollows));
 	registerCommand(registry, "unfollow", middlewareLoggedIn(handlerUnfollow));
+	registerCommand(registry, "browse", middlewareLoggedIn(handlerBrowse));
 
 	try {
     		await runCommand(registry, cmdName, ...cmdArgs);

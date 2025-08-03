@@ -20,3 +20,8 @@ export async function getFeedByURL(url: string) {
 export async function markFeedFetched(id: string) {
   await db.update(feeds).set({ last_fetched_at: sql`NOW()` }).where(eq(feeds.id, id));
 }
+
+export async function getNextFeedToFetch() {
+  const result = await db.select().from(feeds).orderBy(sql`${feeds.last_fetched_at} NULLS FIRST`).limit(1);
+  return firstOrUndefined(result);
+}
